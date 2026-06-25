@@ -18,7 +18,6 @@
 body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--paper);color:var(--ink);font-size:15px;line-height:1.55;min-height:100vh}
 .site-header{background:var(--ink);padding:1.1rem 2rem;display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid var(--accent)}
 .site-header h1{font-size:18px;font-weight:700;color:#fff;letter-spacing:-.01em}
-.site-header span.sub{font-size:12px;color:#aaa;margin-top:2px;display:block}
 .header-badge{background:var(--accent);color:#fff;font-size:11px;font-weight:600;padding:3px 11px;border-radius:20px;letter-spacing:.04em;text-transform:uppercase}
 .tabs{display:flex;border-bottom:1.5px solid var(--border);background:var(--surface);padding:0 2rem}
 .tab-btn{background:none;border:none;border-bottom:3px solid transparent;margin-bottom:-1.5px;padding:.7rem 1.1rem;font-size:14px;font-weight:500;color:var(--ink-soft);cursor:pointer;transition:color .15s,border-color .15s}
@@ -40,7 +39,7 @@ input:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(43
 .btn-primary{background:var(--accent);color:#fff}.btn-primary:hover{opacity:.9}
 .btn-secondary{background:var(--paper);color:var(--ink);border:1px solid var(--border-strong);font-weight:500}.btn-secondary:hover{background:var(--border)}
 .btn-danger{background:var(--red-bg);color:var(--red);border:1px solid var(--red-bd);font-weight:500;padding:5px 12px;font-size:12px}
-.btn-sm{padding:6px 12px;font-size:13px}
+.btn-sm{padding:6px 14px;font-size:13px}
 .btn-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:1.25rem}
 .alert{padding:.75rem 1rem;border-radius:var(--rs);font-size:14px;margin-bottom:1rem;display:flex;align-items:flex-start;gap:8px}
 .alert-info{background:var(--accent-bg);color:#1a3a8f;border:1px solid #a0b8f0}
@@ -58,15 +57,15 @@ td{padding:11px 14px;border-bottom:1px solid var(--border);vertical-align:middle
 tr:last-child td{border-bottom:none}
 tr:hover td{background:var(--paper)}
 .tr-present td:first-child{border-left:3px solid var(--green)}
-.tr-late td:first-child{border-left:3px solid var(--yellow-bd)}
-.tr-absent td:first-child{border-left:3px solid var(--red)}
+.tr-late    td:first-child{border-left:3px solid var(--yellow-bd)}
+.tr-absent  td:first-child{border-left:3px solid var(--red)}
 .stats-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:1.25rem}
 .stat-box{flex:1;min-width:90px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:.9rem 1.1rem}
 .stat-num{font-size:26px;font-weight:700;line-height:1}
 .stat-lbl{font-size:11px;color:var(--ink-soft);margin-top:4px;font-weight:500;text-transform:uppercase;letter-spacing:.04em}
 .stat-green .stat-num{color:var(--green)}
 .stat-yellow .stat-num{color:var(--yellow)}
-.stat-red .stat-num{color:var(--red)}
+.stat-red   .stat-num{color:var(--red)}
 .checkin-result{text-align:center;padding:2rem 1rem}
 .checkin-result .big-icon{font-size:56px;margin-bottom:.75rem}
 .checkin-result h2{font-size:22px;font-weight:700;margin-bottom:.4rem}
@@ -78,30 +77,35 @@ tr:hover td{background:var(--paper)}
 .filter-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:1.25rem;align-items:flex-end}
 .filter-row>div{flex:1;min-width:130px}
 .empty-state{text-align:center;padding:3rem 1rem;color:var(--ink-faint);font-size:14px}
-.class-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.1rem 1.25rem;margin-bottom:.75rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
-.class-info .class-name{font-weight:600;font-size:15px}
-.class-info .class-meta{font-size:12px;color:var(--ink-soft);margin-top:2px}
-.class-actions{display:flex;gap:8px;flex-shrink:0}
-.section-heading{font-size:13px;font-weight:600;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.06em;margin-bottom:1rem;padding-bottom:.5rem;border-bottom:1px solid var(--border)}
-.no-classes{background:var(--accent-bg);border:1px dashed #a0b8f0;border-radius:var(--r);padding:1.5rem;text-align:center;font-size:14px;color:#1a3a8f;margin-bottom:1rem}
-.spin{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
+.section-heading{font-size:13px;font-weight:600;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.75rem;padding-bottom:.5rem;border-bottom:1px solid var(--border)}
+.class-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);margin-bottom:.75rem;overflow:hidden}
+.class-card-header{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.25rem;cursor:pointer;background:var(--paper);gap:1rem;flex-wrap:wrap}
+.class-card-header:hover{background:var(--border)}
+.class-card-header.open{border-bottom:1px solid var(--border)}
+.class-card-body{display:none;padding:1.25rem}
+.class-card-body.open{display:block}
+.class-name{font-weight:600;font-size:15px}
+.class-meta{font-size:12px;color:var(--ink-soft);margin-top:2px}
+.student-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)}
+.student-row:last-child{border-bottom:none}
+.student-name{font-size:14px}
+.no-students{font-size:13px;color:var(--ink-faint);padding:.5rem 0}
+.initials{width:30px;height:30px;border-radius:50%;background:var(--accent-bg);color:var(--accent);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-right:8px}
+.no-classes-msg{background:var(--accent-bg);border:1px dashed #a0b8f0;border-radius:var(--r);padding:1.5rem;text-align:center;font-size:14px;color:#1a3a8f;margin-bottom:1rem}
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:100;align-items:center;justify-content:center;padding:1rem}
 .modal-overlay.open{display:flex}
 .modal{background:#fff;border-radius:var(--r);padding:1.75rem;max-width:460px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.2)}
 .modal h3{font-size:17px;font-weight:600;margin-bottom:.25rem}
 .modal .modal-sub{font-size:13px;color:var(--ink-soft);margin-bottom:1.25rem}
-.modal .btn-row{margin-top:1.25rem}
+.spin{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
 @media(max-width:600px){.site-header{padding:1rem}.main{padding:1rem}.form-row{flex-direction:column}.stats-row{flex-direction:column}}
 </style>
 </head>
 <body>
 
 <header class="site-header">
-  <div>
-    <h1>Attendance Tracker</h1>
-    
-  </div>
+  <h1>Attendance Tracker</h1>
   <span class="header-badge">Live</span>
 </header>
 
@@ -114,30 +118,23 @@ tr:hover td{background:var(--paper)}
 <!-- ===== CHECK IN ===== -->
 <div id="tab-checkin" class="tab-panel active">
   <div class="main">
-
-    <div id="no-classes-msg" class="no-classes" style="display:none">
-      ⚠️ No classes have been set up yet. Ask your administrator to add classes in the Settings tab.
+    <div id="no-classes-msg" class="no-classes-msg" style="display:none">
+      ⚠️ No classes have been set up yet. Ask your administrator to add classes and students in the Settings tab.
     </div>
 
     <div id="checkin-form-card" class="card">
       <div class="card-title">Record your attendance</div>
-      <div class="card-sub">Fill in all fields then click Check In</div>
+      <div class="card-sub">Select your class and your name, then click Check In</div>
 
       <label>Class</label>
-      <select id="class-select">
+      <select id="class-select" onchange="onClassChange()">
         <option value="">— select your class —</option>
       </select>
 
-      <div class="form-row" style="margin-top:0">
-        <div>
-          <label>First name</label>
-          <input type="text" id="firstName" placeholder="e.g. Fatima" autocomplete="given-name">
-        </div>
-        <div>
-          <label>Last name</label>
-          <input type="text" id="lastName" placeholder="e.g. Ali" autocomplete="family-name">
-        </div>
-      </div>
+      <label>Your name</label>
+      <select id="student-select" disabled>
+        <option value="">— select class first —</option>
+      </select>
 
       <div class="form-row" style="margin-top:0">
         <div>
@@ -176,14 +173,12 @@ tr:hover td{background:var(--paper)}
         </div>
       </div>
     </div>
-
   </div>
 </div>
 
 <!-- ===== DASHBOARD ===== -->
 <div id="tab-dashboard" class="tab-panel">
   <div class="main">
-
     <div id="dash-gate" class="pin-gate">
       <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1.5" style="margin-bottom:1rem"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
       <h2>Admin dashboard</h2>
@@ -196,7 +191,6 @@ tr:hover td{background:var(--paper)}
     </div>
 
     <div id="dash-content" style="display:none">
-
       <div class="filter-row">
         <div>
           <label>Class</label>
@@ -235,14 +229,7 @@ tr:hover td{background:var(--paper)}
       <div class="tbl-wrap">
         <table>
           <thead>
-            <tr>
-              <th>Name</th>
-              <th>Class</th>
-              <th>Date</th>
-              <th>Time</th>
-              <th>Status</th>
-              <th></th>
-            </tr>
+            <tr><th>Name</th><th>Class</th><th>Date</th><th>Time</th><th>Status</th><th></th></tr>
           </thead>
           <tbody id="records-body"></tbody>
         </table>
@@ -255,11 +242,10 @@ tr:hover td{background:var(--paper)}
 <!-- ===== SETTINGS ===== -->
 <div id="tab-settings" class="tab-panel">
   <div class="main">
-
     <div id="settings-gate" class="pin-gate">
       <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1.5" style="margin-bottom:1rem"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
       <h2>Settings</h2>
-      <p>Enter your PIN to manage classes and settings</p>
+      <p>Enter your PIN to manage classes and students</p>
       <div class="pin-row">
         <input type="password" id="settings-pin" placeholder="PIN" onkeydown="if(event.key==='Enter')settingsUnlock()" style="text-align:center;letter-spacing:.2em">
         <button class="btn btn-primary" onclick="settingsUnlock()">Unlock</button>
@@ -269,10 +255,10 @@ tr:hover td{background:var(--paper)}
 
     <div id="settings-content" style="display:none">
 
-      <!-- CLASSES -->
+      <!-- CLASSES + STUDENTS -->
       <div class="card">
-        <div class="card-title">Classes</div>
-        <div class="card-sub">Add and manage your classes. Each class has its own on-time cutoff rules.</div>
+        <div class="card-title">Classes & Students</div>
+        <div class="card-sub">Add classes, then add students to each class. Students select their name from a dropdown when checking in.</div>
         <div id="classes-list"></div>
         <button class="btn btn-primary btn-sm" onclick="openAddClass()">+ Add class</button>
       </div>
@@ -282,12 +268,15 @@ tr:hover td{background:var(--paper)}
         <div class="card-title">Mark student absent</div>
         <div class="card-sub">Manually record a student who never checked in</div>
         <label>Class</label>
-        <select id="abs-class"></select>
-        <div class="form-row" style="margin-top:0">
-          <div><label>First name</label><input type="text" id="abs-first"></div>
-          <div><label>Last name</label><input type="text" id="abs-last"></div>
-          <div><label>Date</label><input type="date" id="abs-date"></div>
-        </div>
+        <select id="abs-class" onchange="loadAbsStudents()">
+          <option value="">— select class —</option>
+        </select>
+        <label>Student</label>
+        <select id="abs-student" disabled>
+          <option value="">— select class first —</option>
+        </select>
+        <label>Date</label>
+        <input type="date" id="abs-date">
         <div id="abs-msg" class="alert" style="display:none;margin-top:1rem"></div>
         <div class="btn-row"><button class="btn btn-primary" onclick="markAbsent()">Mark as Absent</button></div>
       </div>
@@ -306,48 +295,68 @@ tr:hover td{background:var(--paper)}
           <button class="btn btn-secondary" onclick="settingsLock()">Lock settings</button>
         </div>
       </div>
-
     </div>
   </div>
 </div>
 
-<!-- ===== ADD / EDIT CLASS MODAL ===== -->
+<!-- CLASS MODAL -->
 <div class="modal-overlay" id="class-modal">
   <div class="modal">
     <h3 id="modal-title">Add class</h3>
-    <div class="modal-sub">Set the class name and on-time cutoff times. Leave a day blank if class does not meet that day.</div>
-
+    <div class="modal-sub">Set the name and on-time cutoff. Leave a day blank if no class meets that day.</div>
     <label>Class name</label>
     <input type="text" id="modal-name" placeholder="e.g. Cybersecurity — Round 3">
-
     <div class="form-row" style="margin-top:0">
       <div>
         <label>Weekday cutoff (Mon–Fri)</label>
-        <input type="time" id="modal-weekday" placeholder="e.g. 17:30">
+        <input type="time" id="modal-weekday">
         <div style="font-size:12px;color:var(--ink-soft);margin-top:4px">Leave blank if no weekday sessions</div>
       </div>
       <div>
         <label>Saturday cutoff</label>
-        <input type="time" id="modal-saturday" placeholder="e.g. 12:30">
+        <input type="time" id="modal-saturday">
         <div style="font-size:12px;color:var(--ink-soft);margin-top:4px">Leave blank if no Saturday sessions</div>
       </div>
     </div>
-
     <div id="modal-err" class="alert alert-err" style="display:none;margin-top:1rem"></div>
-
     <div class="btn-row">
       <button class="btn btn-primary" onclick="saveClass()">Save class</button>
-      <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-secondary" onclick="closeModal('class-modal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD STUDENT MODAL -->
+<div class="modal-overlay" id="student-modal">
+  <div class="modal">
+    <h3 id="student-modal-title">Add student</h3>
+    <div class="modal-sub" id="student-modal-sub"></div>
+    <div class="form-row">
+      <div>
+        <label>First name</label>
+        <input type="text" id="new-student-first" placeholder="e.g. Fatima">
+      </div>
+      <div>
+        <label>Last name</label>
+        <input type="text" id="new-student-last" placeholder="e.g. Ali">
+      </div>
+    </div>
+    <div id="student-modal-err" class="alert alert-err" style="display:none;margin-top:1rem"></div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="saveStudent()">Add student</button>
+      <button class="btn btn-secondary" onclick="closeModal('student-modal')">Cancel</button>
     </div>
   </div>
 </div>
 
 <script>
-let adminPin     = null;
-let settingsPin  = null;
-let allRecords   = [];
-let allClasses   = [];
-let editingClassId = null;
+let adminPin    = null;
+let settingsPin = null;
+let allRecords  = [];
+let allClasses  = [];
+let allStudents = [];
+let editingClassId   = null;
+let addingStudentClassId = null;
 
 // ---- UTILS ----
 function fmt(d) {
@@ -359,43 +368,42 @@ function fmt(d) {
 function fmtTime(t) {
   if (!t) return '—';
   const [h,m] = t.split(':').map(Number);
-  const ampm = h>=12?'PM':'AM', h12=h%12||12;
+  const ampm=h>=12?'PM':'AM', h12=h%12||12;
   return `${h12}:${String(m).padStart(2,'0')} ${ampm}`;
-}
-function fmt12(t) {
-  // convert "17:30" to "5:30 PM"
-  if (!t) return '—';
-  return fmtTime(t);
 }
 function pillHtml(s) {
   const map={present:'pill-present',late:'pill-late',absent:'pill-absent'};
   return `<span class="pill ${map[s]||''}">${s.charAt(0).toUpperCase()+s.slice(1)}</span>`;
 }
+function initials(f,l) { return ((f[0]||'')+(l[0]||'')).toUpperCase(); }
 function setDefaults() {
   const now=new Date(), pad=n=>String(n).padStart(2,'0');
-  document.getElementById('checkin-date').value=`${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}`;
-  document.getElementById('checkin-time').value=`${pad(now.getHours())}:${pad(now.getMinutes())}`;
-  const ad=document.getElementById('abs-date');
-  if(ad) ad.value=`${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}`;
+  const today=`${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}`;
+  const timeNow=`${pad(now.getHours())}:${pad(now.getMinutes())}`;
+  document.getElementById('checkin-date').value = today;
+  document.getElementById('checkin-time').value = timeNow;
+  const ad = document.getElementById('abs-date');
+  if (ad) ad.value = today;
 }
 
-// ---- LOAD CLASSES ----
+// ---- LOAD DATA ----
 async function loadClasses() {
   const r = await fetch('/api/classes');
   allClasses = await r.json();
-  populateClassSelects();
+  populateClassDropdowns();
+}
+async function loadAllStudents() {
+  const r = await fetch('/api/students');
+  allStudents = await r.json();
 }
 
-function populateClassSelects() {
-  const selects = ['class-select','filter-class','abs-class'];
-  selects.forEach(id => {
+function populateClassDropdowns() {
+  ['class-select','filter-class','abs-class'].forEach(id => {
     const el = document.getElementById(id);
     if (!el) return;
     const cur = el.value;
     const isFilter = id === 'filter-class';
-    el.innerHTML = isFilter
-      ? '<option value="">All classes</option>'
-      : '<option value="">— select class —</option>';
+    el.innerHTML = isFilter ? '<option value="">All classes</option>' : '<option value="">— select class —</option>';
     allClasses.forEach(c => {
       const o = document.createElement('option');
       o.value = c.id; o.textContent = c.name;
@@ -403,18 +411,33 @@ function populateClassSelects() {
       el.appendChild(o);
     });
   });
-
-  // Show/hide no-classes message
-  const msg = document.getElementById('no-classes-msg');
+  const msg  = document.getElementById('no-classes-msg');
   const form = document.getElementById('checkin-form-card');
-  if (!allClasses.length) {
-    msg.style.display = 'block'; form.style.display = 'none';
-  } else {
-    msg.style.display = 'none'; form.style.display = 'block';
-  }
+  if (!allClasses.length) { msg.style.display='block'; form.style.display='none'; }
+  else { msg.style.display='none'; form.style.display='block'; }
+  updateCutoffHint();
+}
 
-  // Update cutoff hint when class changes
-  document.getElementById('class-select').onchange = updateCutoffHint;
+// ---- CHECK IN ----
+async function onClassChange() {
+  const classId = document.getElementById('class-select').value;
+  const sel = document.getElementById('student-select');
+  sel.innerHTML = '<option value="">— select your name —</option>';
+  sel.disabled = !classId;
+  if (classId) {
+    const r = await fetch(`/api/students?classId=${encodeURIComponent(classId)}`);
+    const students = await r.json();
+    students.forEach(s => {
+      const o = document.createElement('option');
+      o.value = s.id;
+      o.textContent = `${s.firstName} ${s.lastName}`;
+      sel.appendChild(o);
+    });
+    if (!students.length) {
+      sel.innerHTML = '<option value="">No students in this class yet</option>';
+      sel.disabled = true;
+    }
+  }
   updateCutoffHint();
 }
 
@@ -423,117 +446,108 @@ function updateCutoffHint() {
   const cls = allClasses.find(c => c.id === id);
   const hint = document.getElementById('cutoff-hint');
   const txt  = document.getElementById('cutoff-hint-text');
-  if (!cls) { hint.style.display = 'none'; return; }
-  const parts = [];
-  if (cls.weekdayCutoff)  parts.push(`Weekdays — on time by ${fmt12(cls.weekdayCutoff)}`);
-  if (cls.saturdayCutoff) parts.push(`Saturdays — on time by ${fmt12(cls.saturdayCutoff)}`);
-  if (parts.length) {
-    txt.innerHTML = '<strong>On-time cutoffs:</strong> ' + parts.join(' &nbsp;|&nbsp; ');
-    hint.style.display = 'flex';
-  } else {
-    hint.style.display = 'none';
-  }
+  if (!cls) { hint.style.display='none'; return; }
+  const parts=[];
+  if (cls.weekdayCutoff)  parts.push(`Weekdays — on time by ${fmtTime(cls.weekdayCutoff)}`);
+  if (cls.saturdayCutoff) parts.push(`Saturdays — on time by ${fmtTime(cls.saturdayCutoff)}`);
+  if (parts.length) { txt.innerHTML='<strong>On-time cutoffs:</strong> '+parts.join(' &nbsp;|&nbsp; '); hint.style.display='flex'; }
+  else hint.style.display='none';
 }
 
-// ---- CHECK IN ----
 async function doCheckin() {
-  const btn = document.getElementById('checkin-btn');
-  const errDiv = document.getElementById('checkin-err');
-  const errMsg = document.getElementById('checkin-err-msg');
-  errDiv.style.display = 'none';
-  const classId   = document.getElementById('class-select').value;
-  const firstName = document.getElementById('firstName').value.trim();
-  const lastName  = document.getElementById('lastName').value.trim();
+  const btn=document.getElementById('checkin-btn');
+  const errDiv=document.getElementById('checkin-err');
+  const errMsg=document.getElementById('checkin-err-msg');
+  errDiv.style.display='none';
+  const studentId = document.getElementById('student-select').value;
   const date      = document.getElementById('checkin-date').value;
   const time      = document.getElementById('checkin-time').value;
-  if (!classId || !firstName || !lastName || !date || !time) {
-    errMsg.textContent = 'Please fill in all fields including your class.';
-    errDiv.style.display = 'flex'; return;
+  if (!studentId || !date || !time) {
+    errMsg.textContent='Please select your class, your name, and fill in the date and time.';
+    errDiv.style.display='flex'; return;
   }
-  btn.innerHTML = '<span class="spin"></span> Saving...';
-  btn.disabled  = true;
+  btn.innerHTML='<span class="spin"></span> Saving...'; btn.disabled=true;
   try {
     const r = await fetch('/api/checkin', {
       method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ firstName, lastName, date, time, classId })
+      body: JSON.stringify({ studentId, date, time })
     });
     const d = await r.json();
-    if (!r.ok) { errMsg.textContent = d.error||'Server error'; errDiv.style.display='flex'; }
-    else showResult(firstName, lastName, date, time, d.status);
+    if (!r.ok) { errMsg.textContent=d.error||'Server error'; errDiv.style.display='flex'; }
+    else {
+      const student = allStudents.find(s=>s.id===studentId) ||
+        { firstName: document.getElementById('student-select').selectedOptions[0]?.text.split(' ')[0]||'',
+          lastName:  document.getElementById('student-select').selectedOptions[0]?.text.split(' ').slice(1).join(' ')||'' };
+      showResult(student.firstName||'', student.lastName||'', date, time, d.status);
+    }
   } catch(e) {
-    errMsg.textContent = 'Could not reach server.';
-    errDiv.style.display = 'flex';
+    errMsg.textContent='Could not reach server.'; errDiv.style.display='flex';
   }
-  btn.innerHTML = 'Check In'; btn.disabled = false;
+  btn.innerHTML='Check In'; btn.disabled=false;
 }
 
 function showResult(first, last, date, time, status) {
-  document.getElementById('checkin-form-card').style.display = 'none';
-  document.getElementById('checkin-result').style.display = 'block';
-  const icons  = {present:'✅',late:'⏰',absent:'❌'};
-  const titles = {present:'Marked Present',late:'Marked Late',absent:'Marked Absent'};
-  const descs  = {
+  document.getElementById('checkin-form-card').style.display='none';
+  document.getElementById('checkin-result').style.display='block';
+  const icons={present:'✅',late:'⏰',absent:'❌'};
+  const titles={present:'Marked Present',late:'Marked Late',absent:'Marked Absent'};
+  const descs={
     present:`${first} ${last} — ${fmt(date)} at ${fmtTime(time)}`,
     late:`${first} ${last} arrived after the cutoff on ${fmt(date)} at ${fmtTime(time)}`,
     absent:`${first} ${last} — ${fmt(date)}`
   };
-  document.getElementById('result-icon').textContent  = icons[status];
-  document.getElementById('result-title').textContent = titles[status];
-  document.getElementById('result-desc').textContent  = descs[status];
-  const pill = document.getElementById('result-pill');
-  pill.textContent = status.charAt(0).toUpperCase()+status.slice(1);
-  pill.className   = `pill pill-${status}`;
+  document.getElementById('result-icon').textContent=icons[status];
+  document.getElementById('result-title').textContent=titles[status];
+  document.getElementById('result-desc').textContent=descs[status];
+  const pill=document.getElementById('result-pill');
+  pill.textContent=status.charAt(0).toUpperCase()+status.slice(1);
+  pill.className=`pill pill-${status}`;
 }
 
 function resetCheckin() {
-  document.getElementById('checkin-form-card').style.display = 'block';
-  document.getElementById('checkin-result').style.display   = 'none';
-  document.getElementById('firstName').value = '';
-  document.getElementById('lastName').value  = '';
-  document.getElementById('checkin-err').style.display = 'none';
+  document.getElementById('checkin-form-card').style.display='block';
+  document.getElementById('checkin-result').style.display='none';
+  document.getElementById('student-select').value='';
+  document.getElementById('checkin-err').style.display='none';
   setDefaults();
 }
 
 // ---- DASHBOARD ----
 async function dashUnlock() {
-  const pin = document.getElementById('dash-pin').value;
-  const r   = await fetch(`/api/records?pin=${encodeURIComponent(pin)}`);
-  if (r.status===403) { document.getElementById('dash-pin-err').style.display='block'; return; }
-  adminPin = pin;
-  document.getElementById('dash-pin-err').style.display = 'none';
-  document.getElementById('dash-gate').style.display    = 'none';
-  document.getElementById('dash-content').style.display = 'block';
-  allRecords = await r.json();
+  const pin=document.getElementById('dash-pin').value;
+  const r=await fetch(`/api/records?pin=${encodeURIComponent(pin)}`);
+  if(r.status===403){document.getElementById('dash-pin-err').style.display='block';return;}
+  adminPin=pin;
+  document.getElementById('dash-pin-err').style.display='none';
+  document.getElementById('dash-gate').style.display='none';
+  document.getElementById('dash-content').style.display='block';
+  allRecords=await r.json();
   renderTable();
 }
-function dashLock() {
-  adminPin = null;
-  document.getElementById('dash-pin').value = '';
-  document.getElementById('dash-gate').style.display    = 'flex';
-  document.getElementById('dash-content').style.display = 'none';
+function dashLock(){
+  adminPin=null; document.getElementById('dash-pin').value='';
+  document.getElementById('dash-gate').style.display='flex';
+  document.getElementById('dash-content').style.display='none';
 }
-async function loadDashboard() {
-  if (!adminPin) return;
-  const classId = document.getElementById('filter-class').value;
-  const url = classId
-    ? `/api/records?pin=${encodeURIComponent(adminPin)}&classId=${encodeURIComponent(classId)}`
-    : `/api/records?pin=${encodeURIComponent(adminPin)}`;
-  const r = await fetch(url);
-  allRecords = await r.json();
+async function loadDashboard(){
+  if(!adminPin)return;
+  const classId=document.getElementById('filter-class').value;
+  const url=classId?`/api/records?pin=${encodeURIComponent(adminPin)}&classId=${encodeURIComponent(classId)}`:`/api/records?pin=${encodeURIComponent(adminPin)}`;
+  allRecords=await(await fetch(url)).json();
   renderTable();
 }
-function renderTable() {
-  const dateF   = document.getElementById('filter-date').value;
-  const statusF = document.getElementById('filter-status').value;
-  const nameF   = document.getElementById('filter-name').value.toLowerCase();
-  let rows = allRecords.filter(r => {
-    if (dateF   && r.date   !== dateF)                                               return false;
-    if (statusF && r.status !== statusF)                                             return false;
-    if (nameF   && !`${r.firstName} ${r.lastName}`.toLowerCase().includes(nameF))   return false;
+function renderTable(){
+  const dateF=document.getElementById('filter-date').value;
+  const statusF=document.getElementById('filter-status').value;
+  const nameF=document.getElementById('filter-name').value.toLowerCase();
+  let rows=allRecords.filter(r=>{
+    if(dateF&&r.date!==dateF)return false;
+    if(statusF&&r.status!==statusF)return false;
+    if(nameF&&!`${r.firstName} ${r.lastName}`.toLowerCase().includes(nameF))return false;
     return true;
   });
-  const total=rows.length, present=rows.filter(r=>r.status==='present').length,
-        late=rows.filter(r=>r.status==='late').length, absent=rows.filter(r=>r.status==='absent').length;
+  const total=rows.length,present=rows.filter(r=>r.status==='present').length,
+        late=rows.filter(r=>r.status==='late').length,absent=rows.filter(r=>r.status==='absent').length;
   document.getElementById('stats-row').innerHTML=`
     <div class="stat-box"><div class="stat-num">${total}</div><div class="stat-lbl">Total</div></div>
     <div class="stat-box stat-green"><div class="stat-num">${present}</div><div class="stat-lbl">Present</div></div>
@@ -541,7 +555,7 @@ function renderTable() {
     <div class="stat-box stat-red"><div class="stat-num">${absent}</div><div class="stat-lbl">Absent</div></div>`;
   const tbody=document.getElementById('records-body');
   const empty=document.getElementById('empty-state');
-  if (!rows.length) { tbody.innerHTML=''; empty.style.display='block'; return; }
+  if(!rows.length){tbody.innerHTML='';empty.style.display='block';return;}
   empty.style.display='none';
   tbody.innerHTML=rows.map(r=>`
     <tr class="tr-${r.status}">
@@ -553,167 +567,200 @@ function renderTable() {
       <td><button class="btn btn-danger" onclick="deleteRecord(${r.id})">Delete</button></td>
     </tr>`).join('');
 }
-function clearFilters() {
+function clearFilters(){
   document.getElementById('filter-date').value='';
   document.getElementById('filter-status').value='';
   document.getElementById('filter-name').value='';
   renderTable();
 }
-async function deleteRecord(id) {
-  if (!confirm('Delete this record?')) return;
-  await fetch(`/api/records/${id}`, {
-    method:'DELETE', headers:{'Content-Type':'application/json'},
-    body: JSON.stringify({pin:adminPin})
-  });
+async function deleteRecord(id){
+  if(!confirm('Delete this record?'))return;
+  await fetch(`/api/records/${id}`,{method:'DELETE',headers:{'Content-Type':'application/json'},body:JSON.stringify({pin:adminPin})});
   await loadDashboard();
 }
-function exportCSV() {
-  const classId = document.getElementById('filter-class').value;
-  const url = classId
-    ? `/api/export/csv?pin=${encodeURIComponent(adminPin)}&classId=${encodeURIComponent(classId)}`
-    : `/api/export/csv?pin=${encodeURIComponent(adminPin)}`;
-  window.open(url, '_blank');
-}
-function exportJSON() {
-  const classId = document.getElementById('filter-class').value;
-  const url = classId
-    ? `/api/export?pin=${encodeURIComponent(adminPin)}&classId=${encodeURIComponent(classId)}`
-    : `/api/export?pin=${encodeURIComponent(adminPin)}`;
-  window.open(url, '_blank');
-}
+function exportCSV(){const classId=document.getElementById('filter-class').value;window.open(`/api/export/csv?pin=${encodeURIComponent(adminPin)}${classId?'&classId='+encodeURIComponent(classId):'`},'_blank');}
+function exportJSON(){const classId=document.getElementById('filter-class').value;window.open(`/api/export?pin=${encodeURIComponent(adminPin)}${classId?'&classId='+encodeURIComponent(classId):'`},'_blank');}
 
 // ---- SETTINGS ----
-async function settingsUnlock() {
-  const pin = document.getElementById('settings-pin').value;
-  const r   = await fetch(`/api/records?pin=${encodeURIComponent(pin)}`);
-  if (r.status===403) { document.getElementById('settings-pin-err').style.display='block'; return; }
-  settingsPin = pin;
-  document.getElementById('settings-pin-err').style.display  = 'none';
-  document.getElementById('settings-gate').style.display     = 'none';
-  document.getElementById('settings-content').style.display  = 'block';
+async function settingsUnlock(){
+  const pin=document.getElementById('settings-pin').value;
+  const r=await fetch(`/api/records?pin=${encodeURIComponent(pin)}`);
+  if(r.status===403){document.getElementById('settings-pin-err').style.display='block';return;}
+  settingsPin=pin;
+  document.getElementById('settings-pin-err').style.display='none';
+  document.getElementById('settings-gate').style.display='none';
+  document.getElementById('settings-content').style.display='block';
   setDefaults();
+  await loadAllStudents();
   renderClassesList();
 }
-function settingsLock() {
-  settingsPin = null;
-  document.getElementById('settings-pin').value='';
-  document.getElementById('settings-gate').style.display    = 'flex';
-  document.getElementById('settings-content').style.display = 'none';
+function settingsLock(){
+  settingsPin=null; document.getElementById('settings-pin').value='';
+  document.getElementById('settings-gate').style.display='flex';
+  document.getElementById('settings-content').style.display='none';
 }
 
-function renderClassesList() {
-  const wrap = document.getElementById('classes-list');
-  if (!allClasses.length) {
-    wrap.innerHTML='<div class="no-classes" style="margin-bottom:1rem">No classes yet. Add your first class below.</div>';
+function renderClassesList(){
+  const wrap=document.getElementById('classes-list');
+  if(!allClasses.length){
+    wrap.innerHTML='<div class="no-classes-msg" style="margin-bottom:1rem">No classes yet. Add your first class below.</div>';
     return;
   }
-  wrap.innerHTML = allClasses.map(c => {
-    const days = [];
-    if (c.weekdayCutoff)  days.push(`Mon–Fri by ${fmt12(c.weekdayCutoff)}`);
-    if (c.saturdayCutoff) days.push(`Sat by ${fmt12(c.saturdayCutoff)}`);
+  wrap.innerHTML=allClasses.map(c=>{
+    const days=[];
+    if(c.weekdayCutoff) days.push(`Mon–Fri by ${fmtTime(c.weekdayCutoff)}`);
+    if(c.saturdayCutoff) days.push(`Sat by ${fmtTime(c.saturdayCutoff)}`);
+    const classStudents=allStudents.filter(s=>s.classId===c.id);
+    const bodyId=`cls-body-${c.id}`;
+    const headId=`cls-head-${c.id}`;
+    const studentRows=classStudents.length
+      ? classStudents.map(s=>`
+          <div class="student-row">
+            <div style="display:flex;align-items:center">
+              <div class="initials">${initials(s.firstName,s.lastName)}</div>
+              <span class="student-name">${s.firstName} ${s.lastName}</span>
+            </div>
+            <button class="btn btn-danger" onclick="removeStudent('${s.id}','${c.id}')">Remove</button>
+          </div>`).join('')
+      : '<div class="no-students">No students yet. Add students below.</div>';
     return `
       <div class="class-card">
-        <div class="class-info">
-          <div class="class-name">${c.name}</div>
-          <div class="class-meta">${days.length ? days.join(' &nbsp;·&nbsp; ') : 'No schedule set'}</div>
+        <div class="class-card-header" id="${headId}" onclick="toggleClassBody('${bodyId}','${headId}')">
+          <div>
+            <div class="class-name">${c.name}</div>
+            <div class="class-meta">${days.length?days.join(' · '):'No schedule set'} &nbsp;·&nbsp; ${classStudents.length} student${classStudents.length!==1?'s':''}</div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <button class="btn btn-secondary btn-sm" onclick="event.stopPropagation();openEditClass('${c.id}')">Edit class</button>
+            <button class="btn btn-danger" onclick="event.stopPropagation();deleteClass('${c.id}')">Delete</button>
+            <span style="color:var(--ink-faint);font-size:18px">›</span>
+          </div>
         </div>
-        <div class="class-actions">
-          <button class="btn btn-secondary btn-sm" onclick="openEditClass('${c.id}')">Edit</button>
-          <button class="btn btn-danger" onclick="deleteClass('${c.id}')">Delete</button>
+        <div class="class-card-body" id="${bodyId}">
+          <div class="section-heading">Students</div>
+          ${studentRows}
+          <div style="margin-top:1rem">
+            <button class="btn btn-primary btn-sm" onclick="openAddStudent('${c.id}','${c.name}')">+ Add student</button>
+          </div>
         </div>
       </div>`;
   }).join('');
 }
 
-// ---- CLASS MODAL ----
-function openAddClass() {
-  editingClassId = null;
-  document.getElementById('modal-title').textContent = 'Add class';
-  document.getElementById('modal-name').value     = '';
-  document.getElementById('modal-weekday').value  = '17:30';
-  document.getElementById('modal-saturday').value = '12:30';
-  document.getElementById('modal-err').style.display = 'none';
-  document.getElementById('class-modal').classList.add('open');
+function toggleClassBody(bodyId,headId){
+  document.getElementById(bodyId).classList.toggle('open');
+  document.getElementById(headId).classList.toggle('open');
 }
-function openEditClass(id) {
-  const cls = allClasses.find(c => c.id === id);
-  if (!cls) return;
-  editingClassId = id;
-  document.getElementById('modal-title').textContent = 'Edit class';
-  document.getElementById('modal-name').value     = cls.name;
-  document.getElementById('modal-weekday').value  = cls.weekdayCutoff  || '';
-  document.getElementById('modal-saturday').value = cls.saturdayCutoff || '';
-  document.getElementById('modal-err').style.display = 'none';
-  document.getElementById('class-modal').classList.add('open');
-}
-function closeModal() {
-  document.getElementById('class-modal').classList.remove('open');
-}
-async function saveClass() {
-  const name     = document.getElementById('modal-name').value.trim();
-  const weekday  = document.getElementById('modal-weekday').value  || null;
-  const saturday = document.getElementById('modal-saturday').value || null;
-  const errEl    = document.getElementById('modal-err');
-  if (!name) { errEl.textContent='Class name is required.'; errEl.style.display='flex'; return; }
 
-  if (editingClassId) {
-    await fetch(`/api/classes/${editingClassId}`, {
-      method:'PUT', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ pin:settingsPin, name, weekdayCutoff:weekday, saturdayCutoff:saturday })
-    });
+// ---- CLASS MODAL ----
+function openAddClass(){
+  editingClassId=null;
+  document.getElementById('modal-title').textContent='Add class';
+  document.getElementById('modal-name').value='';
+  document.getElementById('modal-weekday').value='17:30';
+  document.getElementById('modal-saturday').value='12:30';
+  document.getElementById('modal-err').style.display='none';
+  document.getElementById('class-modal').classList.add('open');
+}
+function openEditClass(id){
+  const cls=allClasses.find(c=>c.id===id);
+  if(!cls)return;
+  editingClassId=id;
+  document.getElementById('modal-title').textContent='Edit class';
+  document.getElementById('modal-name').value=cls.name;
+  document.getElementById('modal-weekday').value=cls.weekdayCutoff||'';
+  document.getElementById('modal-saturday').value=cls.saturdayCutoff||'';
+  document.getElementById('modal-err').style.display='none';
+  document.getElementById('class-modal').classList.add('open');
+}
+async function saveClass(){
+  const name=document.getElementById('modal-name').value.trim();
+  const weekday=document.getElementById('modal-weekday').value||null;
+  const saturday=document.getElementById('modal-saturday').value||null;
+  const errEl=document.getElementById('modal-err');
+  if(!name){errEl.textContent='Class name is required.';errEl.style.display='flex';return;}
+  if(editingClassId){
+    await fetch(`/api/classes/${editingClassId}`,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({pin:settingsPin,name,weekdayCutoff:weekday,saturdayCutoff:saturday})});
   } else {
-    await fetch('/api/classes', {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ pin:settingsPin, name, weekdayCutoff:weekday, saturdayCutoff:saturday })
-    });
+    await fetch('/api/classes',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pin:settingsPin,name,weekdayCutoff:weekday,saturdayCutoff:saturday})});
   }
-  closeModal();
+  closeModal('class-modal');
   await loadClasses();
+  await loadAllStudents();
   renderClassesList();
-  populateClassSelects();
 }
-async function deleteClass(id) {
-  const cls = allClasses.find(c=>c.id===id);
-  if (!confirm(`Delete class "${cls?.name}"? All attendance records for this class will also be deleted.`)) return;
-  await fetch(`/api/classes/${id}`, {
-    method:'DELETE', headers:{'Content-Type':'application/json'},
-    body: JSON.stringify({pin:settingsPin})
-  });
+async function deleteClass(id){
+  const cls=allClasses.find(c=>c.id===id);
+  if(!confirm(`Delete class "${cls?.name}"? All students and records for this class will be deleted.`))return;
+  await fetch(`/api/classes/${id}`,{method:'DELETE',headers:{'Content-Type':'application/json'},body:JSON.stringify({pin:settingsPin})});
   await loadClasses();
+  await loadAllStudents();
   renderClassesList();
-  populateClassSelects();
 }
+
+// ---- STUDENT MODAL ----
+function openAddStudent(classId,className){
+  addingStudentClassId=classId;
+  document.getElementById('student-modal-title').textContent='Add student';
+  document.getElementById('student-modal-sub').textContent=`Adding to: ${className}`;
+  document.getElementById('new-student-first').value='';
+  document.getElementById('new-student-last').value='';
+  document.getElementById('student-modal-err').style.display='none';
+  document.getElementById('student-modal').classList.add('open');
+  setTimeout(()=>document.getElementById('new-student-first').focus(),100);
+}
+async function saveStudent(){
+  const firstName=document.getElementById('new-student-first').value.trim();
+  const lastName =document.getElementById('new-student-last').value.trim();
+  const errEl=document.getElementById('student-modal-err');
+  if(!firstName||!lastName){errEl.textContent='Both first and last name are required.';errEl.style.display='flex';return;}
+  const r=await fetch('/api/students',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pin:settingsPin,firstName,lastName,classId:addingStudentClassId})});
+  const d=await r.json();
+  if(!r.ok){errEl.textContent=d.error||'Error adding student.';errEl.style.display='flex';return;}
+  closeModal('student-modal');
+  await loadAllStudents();
+  renderClassesList();
+}
+async function removeStudent(studentId,classId){
+  const s=allStudents.find(s=>s.id===studentId);
+  if(!confirm(`Remove ${s?.firstName} ${s?.lastName} from this class?`))return;
+  await fetch(`/api/students/${studentId}`,{method:'DELETE',headers:{'Content-Type':'application/json'},body:JSON.stringify({pin:settingsPin})});
+  await loadAllStudents();
+  renderClassesList();
+}
+
+function closeModal(id){document.getElementById(id).classList.remove('open');}
 
 // ---- MARK ABSENT ----
-async function markAbsent() {
-  const classId   = document.getElementById('abs-class').value;
-  const firstName = document.getElementById('abs-first').value.trim();
-  const lastName  = document.getElementById('abs-last').value.trim();
-  const date      = document.getElementById('abs-date').value;
-  const msg       = document.getElementById('abs-msg');
-  if (!classId||!firstName||!lastName||!date) {
-    msg.className='alert alert-err'; msg.textContent='Fill in all fields.'; msg.style.display='flex'; return;
-  }
-  const r = await fetch('/api/absent', {
-    method:'POST', headers:{'Content-Type':'application/json'},
-    body: JSON.stringify({pin:settingsPin, classId, firstName, lastName, date})
-  });
-  const d = await r.json();
-  if (d.ok) {
+async function loadAbsStudents(){
+  const classId=document.getElementById('abs-class').value;
+  const sel=document.getElementById('abs-student');
+  sel.innerHTML='<option value="">— select student —</option>';
+  sel.disabled=!classId;
+  if(!classId)return;
+  const students=allStudents.filter(s=>s.classId===classId);
+  students.forEach(s=>{const o=document.createElement('option');o.value=s.id;o.textContent=`${s.firstName} ${s.lastName}`;sel.appendChild(o);});
+  if(!students.length){sel.innerHTML='<option value="">No students in this class</option>';sel.disabled=true;}
+}
+async function markAbsent(){
+  const studentId=document.getElementById('abs-student').value;
+  const date=document.getElementById('abs-date').value;
+  const msg=document.getElementById('abs-msg');
+  if(!studentId||!date){msg.className='alert alert-err';msg.textContent='Select a student and a date.';msg.style.display='flex';return;}
+  const r=await fetch('/api/absent',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pin:settingsPin,studentId,date})});
+  const d=await r.json();
+  if(d.ok){
+    const s=allStudents.find(s=>s.id===studentId);
     msg.className='alert alert-success';
-    msg.textContent=`${firstName} ${lastName} marked absent for ${fmt(date)}.`;
-    document.getElementById('abs-first').value='';
-    document.getElementById('abs-last').value='';
-  } else {
-    msg.className='alert alert-err'; msg.textContent=d.error||'Error.';
-  }
+    msg.textContent=`${s?.firstName} ${s?.lastName} marked absent for ${fmt(date)}.`;
+  } else {msg.className='alert alert-err';msg.textContent=d.error||'Error.';}
   msg.style.display='flex';
 }
 
 // ---- CHANGE PIN ----
-async function changePin() {
+async function changePin(){
   const cur=document.getElementById('cur-pin').value;
-  const nw =document.getElementById('new-pin').value;
+  const nw=document.getElementById('new-pin').value;
   const msg=document.getElementById('pin-msg');
   const r=await fetch('/api/pin',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({currentPin:cur,newPin:nw})});
   const d=await r.json();
@@ -723,17 +770,18 @@ async function changePin() {
 }
 
 // ---- TABS ----
-function switchTab(name) {
+function switchTab(name){
   document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
   document.getElementById('tab-'+name).classList.add('active');
   document.querySelectorAll('.tab-btn').forEach(b=>{if(b.textContent.toLowerCase().includes(name==='checkin'?'check':name))b.classList.add('active');});
-  if(name==='dashboard'&&adminPin) loadDashboard();
-  if(name==='settings'&&settingsPin) renderClassesList();
+  if(name==='dashboard'&&adminPin)loadDashboard();
+  if(name==='settings'&&settingsPin)renderClassesList();
 }
 
 // ---- INIT ----
 loadClasses();
+loadAllStudents();
 setDefaults();
 </script>
 </body>
