@@ -96,28 +96,28 @@ app.get('/api/students', (req, res) => {
 });
 
 app.post('/api/students', (req, res) => {
-  const { pin, firstName, lastName, classId } = req.body;
+  const { pin, name, classId } = req.body;
   const db = readDB();
   if (pin !== db.adminPin) return res.status(403).json({ error: 'Wrong PIN' });
-  if (!firstName || !lastName || !classId) return res.status(400).json({ error: 'All fields required' });
+  if (!name || !name.trim() || !classId) return res.status(400).json({ error: "Name and class required" });
   const cls = db.classes.find(c => c.id === classId);
   if (!cls) return res.status(404).json({ error: 'Class not found' });
   // prevent duplicates in same class
   const exists = db.students.some(s =>
     s.classId === classId &&
-    s.firstName.toLowerCase() === firstName.trim().toLowerCase() &&
-    s.lastName.toLowerCase()  === lastName.trim().toLowerCase()
+    s.name.toLowerCase() === name.trim().toLowerCase()
+    
   );
   if (exists) return res.status(409).json({ error: 'Student already in this class' });
   const student = {
     id: Date.now().toString(),
     classId,
     className: cls.name,
-    firstName: firstName.trim(),
-    lastName:  lastName.trim()
+    name: name.trim(),
+    
   };
   db.students.push(student);
-  db.students.sort((a, b) => (a.lastName + a.firstName).localeCompare(b.lastName + b.firstName));
+  db.students.sort((a, b) => a.name.localeCompare(b.name));
   writeDB(db);
   res.json({ ok: true, student });
 });
@@ -155,8 +155,8 @@ app.post('/api/checkin', (req, res) => {
     classId:   student.classId,
     className: cls.name,
     studentId,
-    firstName: student.firstName,
-    lastName:  student.lastName,
+    name: student.name,
+    
     date,
     time,
     status,
@@ -167,7 +167,7 @@ app.post('/api/checkin', (req, res) => {
   const key = `${studentId}_${date}`;
   db.records = db.records.filter(r => `${r.studentId}_${r.date}` !== key);
   db.records.push(record);
-  db.records.sort((a, b) => (a.date + a.lastName) < (b.date + b.lastName) ? 1 : -1);
+  db.records.sort((a, b) => (a.date + a.name) < (b.date + b.name) ? 1 : -1);
   writeDB(db);
   res.json({ ok: true, status });
 });
@@ -187,8 +187,8 @@ app.post('/api/absent', (req, res) => {
     classId:   student.classId,
     className: cls ? cls.name : '',
     studentId,
-    firstName: student.firstName,
-    lastName:  student.lastName,
+    name: student.name,
+    
     date,
     time: null,
     status: 'absent',
@@ -224,8 +224,8 @@ app.get('/api/export/csv', (req, res) => {
   const db = readDB();
   if (pin !== db.adminPin) return res.status(403).json({ error: 'Wrong PIN' });
   let records = classId ? db.records.filter(r => r.classId === classId) : db.records;
-  const rows = [['Class','First Name','Last Name','Date','Time','Status']];
-  records.forEach(r => rows.push([r.className||'', r.firstName, r.lastName, r.date, r.time||'', r.status]));
+  const rows = [['Class','Name','Date','Time','Status']];
+  records.forEach(r => rows.push([r.className||'', r.name||'', r.date, r.time||'', r.status]));
   const csv = rows.map(r => r.map(v => `"${v}"`).join(',')).join('\n');
   res.setHeader('Content-Type', 'text/csv');
   res.setHeader('Content-Disposition', 'attachment; filename="attendance.csv"');

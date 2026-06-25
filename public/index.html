@@ -331,16 +331,8 @@ tr:hover td{background:var(--paper)}
   <div class="modal">
     <h3 id="student-modal-title">Add student</h3>
     <div class="modal-sub" id="student-modal-sub"></div>
-    <div class="form-row">
-      <div>
-        <label>First name</label>
-        <input type="text" id="new-student-first" placeholder="e.g. Fatima">
-      </div>
-      <div>
-        <label>Last name</label>
-        <input type="text" id="new-student-last" placeholder="e.g. Ali">
-      </div>
-    </div>
+    <label>Full name</label>
+    <input type="text" id="new-student-name" placeholder="e.g. Fatima Ali">
     <div id="student-modal-err" class="alert alert-err" style="display:none;margin-top:1rem"></div>
     <div class="btn-row">
       <button class="btn btn-primary" onclick="saveStudent()">Add student</button>
@@ -430,7 +422,7 @@ async function onClassChange() {
     students.forEach(s => {
       const o = document.createElement('option');
       o.value = s.id;
-      o.textContent = `${s.firstName} ${s.lastName}`;
+      o.textContent = s.name;
       sel.appendChild(o);
     });
     if (!students.length) {
@@ -475,10 +467,8 @@ async function doCheckin() {
     const d = await r.json();
     if (!r.ok) { errMsg.textContent=d.error||'Server error'; errDiv.style.display='flex'; }
     else {
-      const student = allStudents.find(s=>s.id===studentId) ||
-        { firstName: document.getElementById('student-select').selectedOptions[0]?.text.split(' ')[0]||'',
-          lastName:  document.getElementById('student-select').selectedOptions[0]?.text.split(' ').slice(1).join(' ')||'' };
-      showResult(student.firstName||'', student.lastName||'', date, time, d.status);
+      const studentName = document.getElementById('student-select').selectedOptions[0]?.text || '';
+      showResult(studentName, date, time, d.status);
     }
   } catch(e) {
     errMsg.textContent='Could not reach server.'; errDiv.style.display='flex';
@@ -486,15 +476,15 @@ async function doCheckin() {
   btn.innerHTML='Check In'; btn.disabled=false;
 }
 
-function showResult(first, last, date, time, status) {
+function showResult(name, date, time, status) {
   document.getElementById('checkin-form-card').style.display='none';
   document.getElementById('checkin-result').style.display='block';
   const icons={present:'✅',late:'⏰',absent:'❌'};
   const titles={present:'Marked Present',late:'Marked Late',absent:'Marked Absent'};
   const descs={
-    present:`${first} ${last} — ${fmt(date)} at ${fmtTime(time)}`,
-    late:`${first} ${last} arrived after the cutoff on ${fmt(date)} at ${fmtTime(time)}`,
-    absent:`${first} ${last} — ${fmt(date)}`
+    present:`${name} — ${fmt(date)} at ${fmtTime(time)}`,
+    late:`${name} arrived after the cutoff on ${fmt(date)} at ${fmtTime(time)}`,
+    absent:`${name} — ${fmt(date)}`
   };
   document.getElementById('result-icon').textContent=icons[status];
   document.getElementById('result-title').textContent=titles[status];
@@ -543,7 +533,7 @@ function renderTable(){
   let rows=allRecords.filter(r=>{
     if(dateF&&r.date!==dateF)return false;
     if(statusF&&r.status!==statusF)return false;
-    if(nameF&&!`${r.firstName} ${r.lastName}`.toLowerCase().includes(nameF))return false;
+    if(nameF&&!r.name.toLowerCase().includes(nameF))return false;
     return true;
   });
   const total=rows.length,present=rows.filter(r=>r.status==='present').length,
@@ -559,7 +549,7 @@ function renderTable(){
   empty.style.display='none';
   tbody.innerHTML=rows.map(r=>`
     <tr class="tr-${r.status}">
-      <td><strong>${r.firstName} ${r.lastName}</strong></td>
+      <td><strong>${r.name||'—'}</strong></td>
       <td style="color:var(--ink-soft);font-size:13px">${r.className||'—'}</td>
       <td>${fmt(r.date)}</td>
       <td>${fmtTime(r.time)}</td>
@@ -617,8 +607,8 @@ function renderClassesList(){
       ? classStudents.map(s=>`
           <div class="student-row">
             <div style="display:flex;align-items:center">
-              <div class="initials">${initials(s.firstName,s.lastName)}</div>
-              <span class="student-name">${s.firstName} ${s.lastName}</span>
+              <div class="initials">${(s.name[0]||'').toUpperCase()}</div>
+              <span class="student-name">${s.name}</span>
             </div>
             <button class="btn btn-danger" onclick="removeStudent('${s.id}','${c.id}')">Remove</button>
           </div>`).join('')
@@ -703,18 +693,16 @@ function openAddStudent(classId,className){
   addingStudentClassId=classId;
   document.getElementById('student-modal-title').textContent='Add student';
   document.getElementById('student-modal-sub').textContent=`Adding to: ${className}`;
-  document.getElementById('new-student-first').value='';
-  document.getElementById('new-student-last').value='';
+  document.getElementById('new-student-name').value='';
   document.getElementById('student-modal-err').style.display='none';
   document.getElementById('student-modal').classList.add('open');
-  setTimeout(()=>document.getElementById('new-student-first').focus(),100);
+  setTimeout(()=>document.getElementById('new-student-name').focus(),100);
 }
 async function saveStudent(){
-  const firstName=document.getElementById('new-student-first').value.trim();
-  const lastName =document.getElementById('new-student-last').value.trim();
+  const name=document.getElementById('new-student-name').value.trim();
   const errEl=document.getElementById('student-modal-err');
-  if(!firstName||!lastName){errEl.textContent='Both first and last name are required.';errEl.style.display='flex';return;}
-  const r=await fetch('/api/students',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pin:settingsPin,firstName,lastName,classId:addingStudentClassId})});
+  if(!name){errEl.textContent='Please enter the student name.';errEl.style.display='flex';return;}
+  const r=await fetch('/api/students',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pin:settingsPin,name,classId:addingStudentClassId})});
   const d=await r.json();
   if(!r.ok){errEl.textContent=d.error||'Error adding student.';errEl.style.display='flex';return;}
   closeModal('student-modal');
@@ -723,7 +711,7 @@ async function saveStudent(){
 }
 async function removeStudent(studentId,classId){
   const s=allStudents.find(s=>s.id===studentId);
-  if(!confirm(`Remove ${s?.firstName} ${s?.lastName} from this class?`))return;
+  if(!confirm(`Remove ${s?.name} from this class?`))return;
   await fetch(`/api/students/${studentId}`,{method:'DELETE',headers:{'Content-Type':'application/json'},body:JSON.stringify({pin:settingsPin})});
   await loadAllStudents();
   renderClassesList();
@@ -739,7 +727,7 @@ async function loadAbsStudents(){
   sel.disabled=!classId;
   if(!classId)return;
   const students=allStudents.filter(s=>s.classId===classId);
-  students.forEach(s=>{const o=document.createElement('option');o.value=s.id;o.textContent=`${s.firstName} ${s.lastName}`;sel.appendChild(o);});
+  students.forEach(s=>{const o=document.createElement('option');o.value=s.id;o.textContent=s.name;sel.appendChild(o);});
   if(!students.length){sel.innerHTML='<option value="">No students in this class</option>';sel.disabled=true;}
 }
 async function markAbsent(){
@@ -752,7 +740,7 @@ async function markAbsent(){
   if(d.ok){
     const s=allStudents.find(s=>s.id===studentId);
     msg.className='alert alert-success';
-    msg.textContent=`${s?.firstName} ${s?.lastName} marked absent for ${fmt(date)}.`;
+    msg.textContent=`${s?.name} marked absent for ${fmt(date)}.`;
   } else {msg.className='alert alert-err';msg.textContent=d.error||'Error.';}
   msg.style.display='flex';
 }
