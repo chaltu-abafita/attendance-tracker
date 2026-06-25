@@ -578,8 +578,8 @@ async function deleteRecord(id){
   await fetch(`/api/records/${id}`,{method:'DELETE',headers:{'Content-Type':'application/json'},body:JSON.stringify({pin:adminPin})});
   await loadDashboard();
 }
-function exportCSV(){const classId=document.getElementById('filter-class').value;window.open(`/api/export/csv?pin=${encodeURIComponent(adminPin)}${classId?'&classId='+encodeURIComponent(classId):'`},'_blank');}
-function exportJSON(){const classId=document.getElementById('filter-class').value;window.open(`/api/export?pin=${encodeURIComponent(adminPin)}${classId?'&classId='+encodeURIComponent(classId):'`},'_blank');}
+function exportCSV(){const classId=document.getElementById('filter-class').value;const url='/api/export/csv?pin='+encodeURIComponent(adminPin)+(classId?'&classId='+encodeURIComponent(classId):'');window.open(url,'_blank');}
+function exportJSON(){const classId=document.getElementById('filter-class').value;const url='/api/export?pin='+encodeURIComponent(adminPin)+(classId?'&classId='+encodeURIComponent(classId):'');window.open(url,'_blank');}
 
 // ---- SETTINGS ----
 async function settingsUnlock(){
