@@ -49,6 +49,15 @@ input:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(43
 .pill-present{background:var(--green-bg);color:var(--green);border:1px solid var(--green-bd)}
 .pill-late{background:var(--yellow-bg);color:var(--yellow);border:1px solid var(--yellow-bd)}
 .pill-absent{background:var(--red-bg);color:var(--red);border:1px solid var(--red-bd)}
+
+/* STATUS TOGGLE BUTTONS */
+.status-toggle{display:flex;gap:8px;margin-top:4px;flex-wrap:wrap}
+.status-btn{flex:1;min-width:90px;padding:10px 8px;border-radius:var(--rs);border:2px solid var(--border-strong);background:#fff;font-size:14px;font-weight:600;cursor:pointer;text-align:center;transition:all .15s;color:var(--ink-soft)}
+.status-btn:hover{border-color:var(--border-strong);background:var(--paper)}
+.status-btn.selected-present{background:var(--green-bg);border-color:var(--green);color:var(--green)}
+.status-btn.selected-late{background:var(--yellow-bg);border-color:var(--yellow-bd);color:var(--yellow)}
+.status-btn.selected-absent{background:var(--red-bg);border-color:var(--red-bd);color:var(--red)}
+
 .tbl-wrap{overflow-x:auto;border-radius:var(--r);border:1px solid var(--border)}
 table{width:100%;border-collapse:collapse;font-size:14px}
 thead tr{background:var(--paper)}
@@ -66,10 +75,6 @@ tr:hover td{background:var(--paper)}
 .stat-green .stat-num{color:var(--green)}
 .stat-yellow .stat-num{color:var(--yellow)}
 .stat-red   .stat-num{color:var(--red)}
-.checkin-result{text-align:center;padding:2rem 1rem}
-.checkin-result .big-icon{font-size:56px;margin-bottom:.75rem}
-.checkin-result h2{font-size:22px;font-weight:700;margin-bottom:.4rem}
-.checkin-result p{font-size:14px;color:var(--ink-soft);margin-bottom:1.25rem}
 .pin-gate{display:flex;flex-direction:column;align-items:center;text-align:center;padding:3rem 1rem}
 .pin-gate h2{font-size:18px;font-weight:600;margin-bottom:.4rem}
 .pin-gate p{font-size:14px;color:var(--ink-soft);margin-bottom:1.5rem}
@@ -88,8 +93,6 @@ tr:hover td{background:var(--paper)}
 .class-meta{font-size:12px;color:var(--ink-soft);margin-top:2px}
 .student-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)}
 .student-row:last-child{border-bottom:none}
-.student-name{font-size:14px}
-.no-students{font-size:13px;color:var(--ink-faint);padding:.5rem 0}
 .initials{width:30px;height:30px;border-radius:50%;background:var(--accent-bg);color:var(--accent);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-right:8px}
 .no-classes-msg{background:var(--accent-bg);border:1px dashed #a0b8f0;border-radius:var(--r);padding:1.5rem;text-align:center;font-size:14px;color:#1a3a8f;margin-bottom:1rem}
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:100;align-items:center;justify-content:center;padding:1rem}
@@ -97,6 +100,10 @@ tr:hover td{background:var(--paper)}
 .modal{background:#fff;border-radius:var(--r);padding:1.75rem;max-width:460px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.2)}
 .modal h3{font-size:17px;font-weight:600;margin-bottom:.25rem}
 .modal .modal-sub{font-size:13px;color:var(--ink-soft);margin-bottom:1.25rem}
+.success-banner{text-align:center;padding:1.5rem 1rem}
+.success-banner .big-icon{font-size:48px;margin-bottom:.5rem}
+.success-banner h3{font-size:18px;font-weight:700;margin-bottom:.25rem}
+.success-banner p{font-size:13px;color:var(--ink-soft);margin-bottom:1rem}
 .spin{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 @media(max-width:600px){.site-header{padding:1rem}.main{padding:1rem}.form-row{flex-direction:column}.stats-row{flex-direction:column}}
@@ -110,68 +117,90 @@ tr:hover td{background:var(--paper)}
 </header>
 
 <div class="tabs">
-  <button class="tab-btn active" onclick="switchTab('checkin')">Check In</button>
+  <button class="tab-btn active" onclick="switchTab('attendance')">Take Attendance</button>
   <button class="tab-btn" onclick="switchTab('dashboard')">Dashboard</button>
   <button class="tab-btn" onclick="switchTab('settings')">Settings</button>
 </div>
 
-<!-- ===== CHECK IN ===== -->
-<div id="tab-checkin" class="tab-panel active">
+<!-- ===== TAKE ATTENDANCE ===== -->
+<div id="tab-attendance" class="tab-panel active">
   <div class="main">
-    <div id="no-classes-msg" class="no-classes-msg" style="display:none">
-      ⚠️ No classes have been set up yet. Ask your administrator to add classes and students in the Settings tab.
+
+    <!-- PIN GATE -->
+    <div id="att-gate" class="pin-gate">
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1.5" style="margin-bottom:1rem"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      <h2>Teacher login</h2>
+      <p>Enter your PIN to take attendance</p>
+      <div class="pin-row">
+        <input type="password" id="att-pin" placeholder="PIN" onkeydown="if(event.key==='Enter')attUnlock()" style="text-align:center;letter-spacing:.2em">
+        <button class="btn btn-primary" onclick="attUnlock()">Unlock</button>
+      </div>
+      <div id="att-pin-err" style="margin-top:.75rem;font-size:13px;color:var(--red);display:none">Incorrect PIN</div>
     </div>
 
-    <div id="checkin-form-card" class="card">
-      <div class="card-title">Record your attendance</div>
-      <div class="card-sub">Select your class and your name, then click Check In</div>
+    <!-- ATTENDANCE FORM -->
+    <div id="att-content" style="display:none">
 
-      <label>Class</label>
-      <select id="class-select" onchange="onClassChange()">
-        <option value="">— select your class —</option>
-      </select>
-
-      <label>Your name</label>
-      <select id="student-select" disabled>
-        <option value="">— select class first —</option>
-      </select>
-
-      <div class="form-row" style="margin-top:0">
-        <div>
-          <label>Date</label>
-          <input type="date" id="checkin-date">
-        </div>
-        <div>
-          <label>Time of arrival</label>
-          <input type="time" id="checkin-time">
+      <div id="att-success" class="card" style="display:none">
+        <div class="success-banner">
+          <div class="big-icon" id="suc-icon"></div>
+          <h3 id="suc-title"></h3>
+          <p id="suc-desc"></p>
+          <span class="pill" id="suc-pill"></span>
+          <div style="margin-top:1.25rem">
+            <button class="btn btn-primary" onclick="nextStudent()">Next student</button>
+            <button class="btn btn-secondary" onclick="attLock()" style="margin-left:8px">Done</button>
+          </div>
         </div>
       </div>
 
-      <div id="cutoff-hint" class="alert alert-info" style="margin-top:1rem;font-size:13px;display:none">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:2px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-        <span id="cutoff-hint-text"></span>
-      </div>
+      <div id="att-form" class="card">
+        <div class="card-title">Mark attendance</div>
+        <div class="card-sub">Select class, student, date and status</div>
 
-      <div id="checkin-err" class="alert alert-err" style="display:none;margin-top:1rem">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:2px"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
-        <span id="checkin-err-msg"></span>
-      </div>
+        <div class="form-row">
+          <div>
+            <label>Class</label>
+            <select id="att-class" onchange="loadAttStudents()">
+              <option value="">— select class —</option>
+            </select>
+          </div>
+          <div>
+            <label>Date</label>
+            <input type="date" id="att-date">
+          </div>
+        </div>
 
-      <div class="btn-row">
-        <button class="btn btn-primary" id="checkin-btn" onclick="doCheckin()">Check In</button>
-      </div>
-    </div>
+        <label>Student</label>
+        <select id="att-student" disabled>
+          <option value="">— select class first —</option>
+        </select>
 
-    <div id="checkin-result" class="card" style="display:none">
-      <div class="checkin-result">
-        <div class="big-icon" id="result-icon"></div>
-        <h2 id="result-title"></h2>
-        <p id="result-desc"></p>
-        <span class="pill" id="result-pill"></span>
-        <div style="margin-top:1.5rem">
-          <button class="btn btn-secondary" onclick="resetCheckin()">Check in another student</button>
+        <label>Status</label>
+        <div class="status-toggle">
+          <button class="status-btn" id="btn-present" onclick="selectStatus('present')">✅ Present</button>
+          <button class="status-btn" id="btn-late"    onclick="selectStatus('late')">⏰ Late</button>
+          <button class="status-btn" id="btn-absent"  onclick="selectStatus('absent')">❌ Absent</button>
+        </div>
+
+        <!-- Only shown when Late is selected -->
+        <div id="time-row" style="display:none;margin-top:12px">
+          <label>Arrival time <span style="color:var(--red)">*</span></label>
+          <input type="time" id="att-time">
+          <div style="font-size:12px;color:var(--ink-soft);margin-top:4px" id="cutoff-hint-text"></div>
+        </div>
+
+        <div id="att-err" class="alert alert-err" style="display:none;margin-top:1rem">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:2px"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+          <span id="att-err-msg"></span>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn btn-primary" id="att-save-btn" onclick="saveAttendance()">Save</button>
+          <button class="btn btn-secondary" onclick="attLock()">Lock</button>
         </div>
       </div>
+
     </div>
   </div>
 </div>
@@ -181,7 +210,7 @@ tr:hover td{background:var(--paper)}
   <div class="main">
     <div id="dash-gate" class="pin-gate">
       <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1.5" style="margin-bottom:1rem"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-      <h2>Admin dashboard</h2>
+      <h2>Dashboard</h2>
       <p>Enter your PIN to view attendance records</p>
       <div class="pin-row">
         <input type="password" id="dash-pin" placeholder="PIN" onkeydown="if(event.key==='Enter')dashUnlock()" style="text-align:center;letter-spacing:.2em">
@@ -255,33 +284,13 @@ tr:hover td{background:var(--paper)}
 
     <div id="settings-content" style="display:none">
 
-      <!-- CLASSES + STUDENTS -->
       <div class="card">
         <div class="card-title">Classes & Students</div>
-        <div class="card-sub">Add classes, then add students to each class. Students select their name from a dropdown when checking in.</div>
+        <div class="card-sub">Add classes then add students to each one.</div>
         <div id="classes-list"></div>
         <button class="btn btn-primary btn-sm" onclick="openAddClass()">+ Add class</button>
       </div>
 
-      <!-- MARK ABSENT -->
-      <div class="card">
-        <div class="card-title">Mark student absent</div>
-        <div class="card-sub">Manually record a student who never checked in</div>
-        <label>Class</label>
-        <select id="abs-class" onchange="loadAbsStudents()">
-          <option value="">— select class —</option>
-        </select>
-        <label>Student</label>
-        <select id="abs-student" disabled>
-          <option value="">— select class first —</option>
-        </select>
-        <label>Date</label>
-        <input type="date" id="abs-date">
-        <div id="abs-msg" class="alert" style="display:none;margin-top:1rem"></div>
-        <div class="btn-row"><button class="btn btn-primary" onclick="markAbsent()">Mark as Absent</button></div>
-      </div>
-
-      <!-- CHANGE PIN -->
       <div class="card">
         <div class="card-title">Change admin PIN</div>
         <div class="card-sub">Default PIN is 1234. Change it before sharing the site.</div>
@@ -295,6 +304,7 @@ tr:hover td{background:var(--paper)}
           <button class="btn btn-secondary" onclick="settingsLock()">Lock settings</button>
         </div>
       </div>
+
     </div>
   </div>
 </div>
@@ -303,7 +313,7 @@ tr:hover td{background:var(--paper)}
 <div class="modal-overlay" id="class-modal">
   <div class="modal">
     <h3 id="modal-title">Add class</h3>
-    <div class="modal-sub">Set the name and on-time cutoff. Leave a day blank if no class meets that day.</div>
+    <div class="modal-sub">Set name and on-time cutoff times. Leave a day blank if no class meets that day.</div>
     <label>Class name</label>
     <input type="text" id="modal-name" placeholder="e.g. Cybersecurity — Round 3">
     <div class="form-row" style="margin-top:0">
@@ -329,7 +339,7 @@ tr:hover td{background:var(--paper)}
 <!-- ADD STUDENT MODAL -->
 <div class="modal-overlay" id="student-modal">
   <div class="modal">
-    <h3 id="student-modal-title">Add student</h3>
+    <h3>Add student</h3>
     <div class="modal-sub" id="student-modal-sub"></div>
     <label>Full name</label>
     <input type="text" id="new-student-name" placeholder="e.g. Fatima Ali">
@@ -342,168 +352,195 @@ tr:hover td{background:var(--paper)}
 </div>
 
 <script>
+let teacherPin  = null;
 let adminPin    = null;
 let settingsPin = null;
 let allRecords  = [];
 let allClasses  = [];
 let allStudents = [];
-let editingClassId   = null;
+let selectedStatus = null;
+let editingClassId = null;
 let addingStudentClassId = null;
 
 // ---- UTILS ----
-function fmt(d) {
-  if (!d) return '';
-  const [y,m,dd] = d.split('-');
-  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+function fmt(d){
+  if(!d)return'';
+  const[y,m,dd]=d.split('-');
+  const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   return `${months[Number(m)-1]} ${Number(dd)}, ${y}`;
 }
-function fmtTime(t) {
-  if (!t) return '—';
-  const [h,m] = t.split(':').map(Number);
-  const ampm=h>=12?'PM':'AM', h12=h%12||12;
+function fmtTime(t){
+  if(!t)return'—';
+  const[h,m]=t.split(':').map(Number);
+  const ampm=h>=12?'PM':'AM',h12=h%12||12;
   return `${h12}:${String(m).padStart(2,'0')} ${ampm}`;
 }
-function pillHtml(s) {
+function pillHtml(s){
   const map={present:'pill-present',late:'pill-late',absent:'pill-absent'};
   return `<span class="pill ${map[s]||''}">${s.charAt(0).toUpperCase()+s.slice(1)}</span>`;
 }
-function initials(f,l) { return ((f[0]||'')+(l[0]||'')).toUpperCase(); }
-function setDefaults() {
-  const now=new Date(), pad=n=>String(n).padStart(2,'0');
+function setToday(){
+  const now=new Date(),pad=n=>String(n).padStart(2,'0');
   const today=`${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}`;
   const timeNow=`${pad(now.getHours())}:${pad(now.getMinutes())}`;
-  document.getElementById('checkin-date').value = today;
-  document.getElementById('checkin-time').value = timeNow;
-  const ad = document.getElementById('abs-date');
-  if (ad) ad.value = today;
+  const ad=document.getElementById('att-date');
+  if(ad&&!ad.value) ad.value=today;
+  const at=document.getElementById('att-time');
+  if(at&&!at.value) at.value=timeNow;
 }
 
-// ---- LOAD DATA ----
-async function loadClasses() {
-  const r = await fetch('/api/classes');
-  allClasses = await r.json();
+// ---- LOAD ----
+async function loadClasses(){
+  const r=await fetch('/api/classes');
+  allClasses=await r.json();
   populateClassDropdowns();
 }
-async function loadAllStudents() {
-  const r = await fetch('/api/students');
-  allStudents = await r.json();
+async function loadAllStudents(){
+  const r=await fetch('/api/students');
+  allStudents=await r.json();
 }
-
-function populateClassDropdowns() {
-  ['class-select','filter-class','abs-class'].forEach(id => {
-    const el = document.getElementById(id);
-    if (!el) return;
-    const cur = el.value;
-    const isFilter = id === 'filter-class';
-    el.innerHTML = isFilter ? '<option value="">All classes</option>' : '<option value="">— select class —</option>';
-    allClasses.forEach(c => {
-      const o = document.createElement('option');
-      o.value = c.id; o.textContent = c.name;
-      if (c.id === cur) o.selected = true;
-      el.appendChild(o);
-    });
+function populateClassDropdowns(){
+  ['att-class','filter-class'].forEach(id=>{
+    const el=document.getElementById(id);if(!el)return;
+    const cur=el.value,isFilter=id==='filter-class';
+    el.innerHTML=isFilter?'<option value="">All classes</option>':'<option value="">— select class —</option>';
+    allClasses.forEach(c=>{const o=document.createElement('option');o.value=c.id;o.textContent=c.name;if(c.id===cur)o.selected=true;el.appendChild(o);});
   });
-  const msg  = document.getElementById('no-classes-msg');
-  const form = document.getElementById('checkin-form-card');
-  if (!allClasses.length) { msg.style.display='block'; form.style.display='none'; }
-  else { msg.style.display='none'; form.style.display='block'; }
+}
+
+// ---- TAKE ATTENDANCE - PIN ----
+async function attUnlock(){
+  const pin=document.getElementById('att-pin').value;
+  const r=await fetch(`/api/records?pin=${encodeURIComponent(pin)}`);
+  if(r.status===403){document.getElementById('att-pin-err').style.display='block';return;}
+  teacherPin=pin;
+  document.getElementById('att-pin-err').style.display='none';
+  document.getElementById('att-gate').style.display='none';
+  document.getElementById('att-content').style.display='block';
+  populateClassDropdowns();
+  setToday();
+}
+function attLock(){
+  teacherPin=null;
+  document.getElementById('att-pin').value='';
+  document.getElementById('att-gate').style.display='flex';
+  document.getElementById('att-content').style.display='none';
+  resetAttForm();
+}
+
+// ---- STATUS TOGGLE ----
+function selectStatus(status){
+  selectedStatus=status;
+  ['present','late','absent'].forEach(s=>{
+    const btn=document.getElementById('btn-'+s);
+    btn.className='status-btn'+(status===s?' selected-'+s:'');
+  });
+  // only show time field when late is selected
+  document.getElementById('time-row').style.display=status==='late'?'block':'none';
+  if(status==='late') document.getElementById('att-time').focus();
   updateCutoffHint();
 }
 
-// ---- CHECK IN ----
-async function onClassChange() {
-  const classId = document.getElementById('class-select').value;
-  const sel = document.getElementById('student-select');
-  sel.innerHTML = '<option value="">— select your name —</option>';
-  sel.disabled = !classId;
-  if (classId) {
-    const r = await fetch(`/api/students?classId=${encodeURIComponent(classId)}`);
-    const students = await r.json();
-    students.forEach(s => {
-      const o = document.createElement('option');
-      o.value = s.id;
-      o.textContent = s.name;
-      sel.appendChild(o);
-    });
-    if (!students.length) {
-      sel.innerHTML = '<option value="">No students in this class yet</option>';
-      sel.disabled = true;
-    }
-  }
-  updateCutoffHint();
-}
-
-function updateCutoffHint() {
-  const id  = document.getElementById('class-select').value;
-  const cls = allClasses.find(c => c.id === id);
-  const hint = document.getElementById('cutoff-hint');
-  const txt  = document.getElementById('cutoff-hint-text');
-  if (!cls) { hint.style.display='none'; return; }
+function updateCutoffHint(){
+  const clsId=document.getElementById('att-class').value;
+  const cls=allClasses.find(c=>c.id===clsId);
+  const hint=document.getElementById('cutoff-hint-text');
+  if(!cls){hint.textContent='';return;}
   const parts=[];
-  if (cls.weekdayCutoff)  parts.push(`Weekdays — on time by ${fmtTime(cls.weekdayCutoff)}`);
-  if (cls.saturdayCutoff) parts.push(`Saturdays — on time by ${fmtTime(cls.saturdayCutoff)}`);
-  if (parts.length) { txt.innerHTML='<strong>On-time cutoffs:</strong> '+parts.join(' &nbsp;|&nbsp; '); hint.style.display='flex'; }
-  else hint.style.display='none';
+  if(cls.weekdayCutoff) parts.push(`Weekdays: on time by ${fmtTime(cls.weekdayCutoff)}`);
+  if(cls.saturdayCutoff) parts.push(`Saturdays: on time by ${fmtTime(cls.saturdayCutoff)}`);
+  hint.textContent=parts.length?parts.join('  |  '):'';
 }
 
-async function doCheckin() {
-  const btn=document.getElementById('checkin-btn');
-  const errDiv=document.getElementById('checkin-err');
-  const errMsg=document.getElementById('checkin-err-msg');
+// ---- LOAD STUDENTS FOR ATTENDANCE ----
+async function loadAttStudents(){
+  const classId=document.getElementById('att-class').value;
+  const sel=document.getElementById('att-student');
+  sel.innerHTML='<option value="">— select student —</option>';
+  sel.disabled=!classId;
+  if(!classId)return;
+  const r=await fetch(`/api/students?classId=${encodeURIComponent(classId)}`);
+  const students=await r.json();
+  students.forEach(s=>{const o=document.createElement('option');o.value=s.id;o.textContent=s.name;sel.appendChild(o);});
+  if(!students.length){sel.innerHTML='<option value="">No students in this class</option>';sel.disabled=true;}
+  updateCutoffHint();
+}
+
+// ---- SAVE ATTENDANCE ----
+async function saveAttendance(){
+  const errDiv=document.getElementById('att-err');
+  const errMsg=document.getElementById('att-err-msg');
   errDiv.style.display='none';
-  const studentId = document.getElementById('student-select').value;
-  const date      = document.getElementById('checkin-date').value;
-  const time      = document.getElementById('checkin-time').value;
-  if (!studentId || !date || !time) {
-    errMsg.textContent='Please select your class, your name, and fill in the date and time.';
-    errDiv.style.display='flex'; return;
-  }
-  btn.innerHTML='<span class="spin"></span> Saving...'; btn.disabled=true;
-  try {
-    const r = await fetch('/api/checkin', {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ studentId, date, time })
+  const studentId=document.getElementById('att-student').value;
+  const date=document.getElementById('att-date').value;
+  const time=document.getElementById('att-time').value;
+  if(!studentId){errMsg.textContent='Please select a student.';errDiv.style.display='flex';return;}
+  if(!date){errMsg.textContent='Please select a date.';errDiv.style.display='flex';return;}
+  if(!selectedStatus){errMsg.textContent='Please select a status — Present, Late, or Absent.';errDiv.style.display='flex';return;}
+  if(selectedStatus==='late'&&!time){errMsg.textContent='Please enter the arrival time for a late student.';errDiv.style.display='flex';return;}
+
+  const btn=document.getElementById('att-save-btn');
+  btn.innerHTML='<span class="spin"></span> Saving...';btn.disabled=true;
+
+  try{
+    const r=await fetch('/api/attendance',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({pin:teacherPin,studentId,date,status:selectedStatus,time:selectedStatus==='late'?time:null})
     });
-    const d = await r.json();
-    if (!r.ok) { errMsg.textContent=d.error||'Server error'; errDiv.style.display='flex'; }
-    else {
-      const studentName = document.getElementById('student-select').selectedOptions[0]?.text || '';
-      showResult(studentName, date, time, d.status);
+    const d=await r.json();
+    if(!r.ok){errMsg.textContent=d.error||'Server error';errDiv.style.display='flex';}
+    else{
+      const student=allStudents.find(s=>s.id===studentId);
+      const name=student?student.name:(document.getElementById('att-student').selectedOptions[0]?.text||'Student');
+      showAttSuccess(name,date,time,d.status);
     }
-  } catch(e) {
-    errMsg.textContent='Could not reach server.'; errDiv.style.display='flex';
-  }
-  btn.innerHTML='Check In'; btn.disabled=false;
+  }catch(e){errMsg.textContent='Could not reach server.';errDiv.style.display='flex';}
+  btn.innerHTML='Save';btn.disabled=false;
 }
 
-function showResult(name, date, time, status) {
-  document.getElementById('checkin-form-card').style.display='none';
-  document.getElementById('checkin-result').style.display='block';
+function showAttSuccess(name,date,time,status){
+  document.getElementById('att-form').style.display='none';
+  document.getElementById('att-success').style.display='block';
   const icons={present:'✅',late:'⏰',absent:'❌'};
   const titles={present:'Marked Present',late:'Marked Late',absent:'Marked Absent'};
   const descs={
-    present:`${name} — ${fmt(date)} at ${fmtTime(time)}`,
-    late:`${name} arrived after the cutoff on ${fmt(date)} at ${fmtTime(time)}`,
+    present:`${name} — ${fmt(date)}`,
+    late:`${name} arrived late on ${fmt(date)} at ${fmtTime(time)}`,
     absent:`${name} — ${fmt(date)}`
   };
-  document.getElementById('result-icon').textContent=icons[status];
-  document.getElementById('result-title').textContent=titles[status];
-  document.getElementById('result-desc').textContent=descs[status];
-  const pill=document.getElementById('result-pill');
+  document.getElementById('suc-icon').textContent=icons[status];
+  document.getElementById('suc-title').textContent=titles[status];
+  document.getElementById('suc-desc').textContent=descs[status];
+  const pill=document.getElementById('suc-pill');
   pill.textContent=status.charAt(0).toUpperCase()+status.slice(1);
-  pill.className=`pill pill-${status}`;
+  pill.className='pill pill-'+status;
 }
 
-function resetCheckin() {
-  document.getElementById('checkin-form-card').style.display='block';
-  document.getElementById('checkin-result').style.display='none';
-  document.getElementById('student-select').value='';
-  document.getElementById('checkin-err').style.display='none';
-  setDefaults();
+function nextStudent(){
+  document.getElementById('att-form').style.display='block';
+  document.getElementById('att-success').style.display='none';
+  resetAttForm(true); // keep class and date
+}
+
+function resetAttForm(keepClassDate){
+  if(!keepClassDate){
+    document.getElementById('att-class').value='';
+    document.getElementById('att-date').value='';
+    setToday();
+  }
+  document.getElementById('att-student').value='';
+  document.getElementById('att-student').disabled=true;
+  document.getElementById('att-student').innerHTML='<option value="">— select class first —</option>';
+  document.getElementById('att-time').value='';
+  document.getElementById('time-row').style.display='none';
+  document.getElementById('att-err').style.display='none';
+  selectedStatus=null;
+  ['present','late','absent'].forEach(s=>document.getElementById('btn-'+s).className='status-btn');
+  if(keepClassDate) loadAttStudents();
 }
 
 // ---- DASHBOARD ----
-async function dashUnlock() {
+async function dashUnlock(){
   const pin=document.getElementById('dash-pin').value;
   const r=await fetch(`/api/records?pin=${encodeURIComponent(pin)}`);
   if(r.status===403){document.getElementById('dash-pin-err').style.display='block';return;}
@@ -512,10 +549,11 @@ async function dashUnlock() {
   document.getElementById('dash-gate').style.display='none';
   document.getElementById('dash-content').style.display='block';
   allRecords=await r.json();
+  populateClassDropdowns();
   renderTable();
 }
 function dashLock(){
-  adminPin=null; document.getElementById('dash-pin').value='';
+  adminPin=null;document.getElementById('dash-pin').value='';
   document.getElementById('dash-gate').style.display='flex';
   document.getElementById('dash-content').style.display='none';
 }
@@ -533,7 +571,7 @@ function renderTable(){
   let rows=allRecords.filter(r=>{
     if(dateF&&r.date!==dateF)return false;
     if(statusF&&r.status!==statusF)return false;
-    if(nameF&&!r.name.toLowerCase().includes(nameF))return false;
+    if(nameF&&!(r.name||'').toLowerCase().includes(nameF))return false;
     return true;
   });
   const total=rows.length,present=rows.filter(r=>r.status==='present').length,
@@ -580,39 +618,33 @@ async function settingsUnlock(){
   document.getElementById('settings-pin-err').style.display='none';
   document.getElementById('settings-gate').style.display='none';
   document.getElementById('settings-content').style.display='block';
-  setDefaults();
   await loadAllStudents();
   renderClassesList();
 }
 function settingsLock(){
-  settingsPin=null; document.getElementById('settings-pin').value='';
+  settingsPin=null;document.getElementById('settings-pin').value='';
   document.getElementById('settings-gate').style.display='flex';
   document.getElementById('settings-content').style.display='none';
 }
-
 function renderClassesList(){
   const wrap=document.getElementById('classes-list');
-  if(!allClasses.length){
-    wrap.innerHTML='<div class="no-classes-msg" style="margin-bottom:1rem">No classes yet. Add your first class below.</div>';
-    return;
-  }
+  if(!allClasses.length){wrap.innerHTML='<div class="no-classes-msg" style="margin-bottom:1rem">No classes yet. Add your first class below.</div>';return;}
   wrap.innerHTML=allClasses.map(c=>{
     const days=[];
     if(c.weekdayCutoff) days.push(`Mon–Fri by ${fmtTime(c.weekdayCutoff)}`);
     if(c.saturdayCutoff) days.push(`Sat by ${fmtTime(c.saturdayCutoff)}`);
     const classStudents=allStudents.filter(s=>s.classId===c.id);
-    const bodyId=`cls-body-${c.id}`;
-    const headId=`cls-head-${c.id}`;
+    const bodyId='cls-body-'+c.id,headId='cls-head-'+c.id;
     const studentRows=classStudents.length
       ? classStudents.map(s=>`
           <div class="student-row">
             <div style="display:flex;align-items:center">
               <div class="initials">${(s.name[0]||'').toUpperCase()}</div>
-              <span class="student-name">${s.name}</span>
+              <span>${s.name}</span>
             </div>
-            <button class="btn btn-danger" onclick="removeStudent('${s.id}','${c.id}')">Remove</button>
+            <button class="btn btn-danger" onclick="removeStudent('${s.id}')">Remove</button>
           </div>`).join('')
-      : '<div class="no-students">No students yet. Add students below.</div>';
+      : '<div style="font-size:13px;color:var(--ink-faint);padding:.5rem 0">No students yet.</div>';
     return `
       <div class="class-card">
         <div class="class-card-header" id="${headId}" onclick="toggleClassBody('${bodyId}','${headId}')">
@@ -621,7 +653,7 @@ function renderClassesList(){
             <div class="class-meta">${days.length?days.join(' · '):'No schedule set'} &nbsp;·&nbsp; ${classStudents.length} student${classStudents.length!==1?'s':''}</div>
           </div>
           <div style="display:flex;gap:8px;align-items:center">
-            <button class="btn btn-secondary btn-sm" onclick="event.stopPropagation();openEditClass('${c.id}')">Edit class</button>
+            <button class="btn btn-secondary btn-sm" onclick="event.stopPropagation();openEditClass('${c.id}')">Edit</button>
             <button class="btn btn-danger" onclick="event.stopPropagation();deleteClass('${c.id}')">Delete</button>
             <span style="color:var(--ink-faint);font-size:18px">›</span>
           </div>
@@ -636,13 +668,10 @@ function renderClassesList(){
       </div>`;
   }).join('');
 }
-
 function toggleClassBody(bodyId,headId){
   document.getElementById(bodyId).classList.toggle('open');
   document.getElementById(headId).classList.toggle('open');
 }
-
-// ---- CLASS MODAL ----
 function openAddClass(){
   editingClassId=null;
   document.getElementById('modal-title').textContent='Add class';
@@ -653,8 +682,7 @@ function openAddClass(){
   document.getElementById('class-modal').classList.add('open');
 }
 function openEditClass(id){
-  const cls=allClasses.find(c=>c.id===id);
-  if(!cls)return;
+  const cls=allClasses.find(c=>c.id===id);if(!cls)return;
   editingClassId=id;
   document.getElementById('modal-title').textContent='Edit class';
   document.getElementById('modal-name').value=cls.name;
@@ -671,7 +699,7 @@ async function saveClass(){
   if(!name){errEl.textContent='Class name is required.';errEl.style.display='flex';return;}
   if(editingClassId){
     await fetch(`/api/classes/${editingClassId}`,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({pin:settingsPin,name,weekdayCutoff:weekday,saturdayCutoff:saturday})});
-  } else {
+  }else{
     await fetch('/api/classes',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pin:settingsPin,name,weekdayCutoff:weekday,saturdayCutoff:saturday})});
   }
   closeModal('class-modal');
@@ -683,16 +711,11 @@ async function deleteClass(id){
   const cls=allClasses.find(c=>c.id===id);
   if(!confirm(`Delete class "${cls?.name}"? All students and records for this class will be deleted.`))return;
   await fetch(`/api/classes/${id}`,{method:'DELETE',headers:{'Content-Type':'application/json'},body:JSON.stringify({pin:settingsPin})});
-  await loadClasses();
-  await loadAllStudents();
-  renderClassesList();
+  await loadClasses();await loadAllStudents();renderClassesList();
 }
-
-// ---- STUDENT MODAL ----
 function openAddStudent(classId,className){
   addingStudentClassId=classId;
-  document.getElementById('student-modal-title').textContent='Add student';
-  document.getElementById('student-modal-sub').textContent=`Adding to: ${className}`;
+  document.getElementById('student-modal-sub').textContent='Adding to: '+className;
   document.getElementById('new-student-name').value='';
   document.getElementById('student-modal-err').style.display='none';
   document.getElementById('student-modal').classList.add('open');
@@ -706,63 +729,30 @@ async function saveStudent(){
   const d=await r.json();
   if(!r.ok){errEl.textContent=d.error||'Error adding student.';errEl.style.display='flex';return;}
   closeModal('student-modal');
-  await loadAllStudents();
-  renderClassesList();
+  await loadAllStudents();renderClassesList();
 }
-async function removeStudent(studentId,classId){
+async function removeStudent(studentId){
   const s=allStudents.find(s=>s.id===studentId);
   if(!confirm(`Remove ${s?.name} from this class?`))return;
   await fetch(`/api/students/${studentId}`,{method:'DELETE',headers:{'Content-Type':'application/json'},body:JSON.stringify({pin:settingsPin})});
-  await loadAllStudents();
-  renderClassesList();
+  await loadAllStudents();renderClassesList();
 }
-
 function closeModal(id){document.getElementById(id).classList.remove('open');}
-
-// ---- MARK ABSENT ----
-async function loadAbsStudents(){
-  const classId=document.getElementById('abs-class').value;
-  const sel=document.getElementById('abs-student');
-  sel.innerHTML='<option value="">— select student —</option>';
-  sel.disabled=!classId;
-  if(!classId)return;
-  const students=allStudents.filter(s=>s.classId===classId);
-  students.forEach(s=>{const o=document.createElement('option');o.value=s.id;o.textContent=s.name;sel.appendChild(o);});
-  if(!students.length){sel.innerHTML='<option value="">No students in this class</option>';sel.disabled=true;}
-}
-async function markAbsent(){
-  const studentId=document.getElementById('abs-student').value;
-  const date=document.getElementById('abs-date').value;
-  const msg=document.getElementById('abs-msg');
-  if(!studentId||!date){msg.className='alert alert-err';msg.textContent='Select a student and a date.';msg.style.display='flex';return;}
-  const r=await fetch('/api/absent',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pin:settingsPin,studentId,date})});
-  const d=await r.json();
-  if(d.ok){
-    const s=allStudents.find(s=>s.id===studentId);
-    msg.className='alert alert-success';
-    msg.textContent=`${s?.name} marked absent for ${fmt(date)}.`;
-  } else {msg.className='alert alert-err';msg.textContent=d.error||'Error.';}
-  msg.style.display='flex';
-}
-
-// ---- CHANGE PIN ----
 async function changePin(){
-  const cur=document.getElementById('cur-pin').value;
-  const nw=document.getElementById('new-pin').value;
+  const cur=document.getElementById('cur-pin').value,nw=document.getElementById('new-pin').value;
   const msg=document.getElementById('pin-msg');
   const r=await fetch('/api/pin',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({currentPin:cur,newPin:nw})});
   const d=await r.json();
   msg.style.display='block';
-  if(d.ok){settingsPin=nw;adminPin=nw;msg.style.color='var(--green)';msg.textContent='PIN updated.';document.getElementById('cur-pin').value='';document.getElementById('new-pin').value='';}
+  if(d.ok){settingsPin=nw;adminPin=nw;teacherPin=nw;msg.style.color='var(--green)';msg.textContent='PIN updated.';document.getElementById('cur-pin').value='';document.getElementById('new-pin').value='';}
   else{msg.style.color='var(--red)';msg.textContent=d.error||'Error.';}
 }
-
-// ---- TABS ----
 function switchTab(name){
   document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
   document.getElementById('tab-'+name).classList.add('active');
-  document.querySelectorAll('.tab-btn').forEach(b=>{if(b.textContent.toLowerCase().includes(name==='checkin'?'check':name))b.classList.add('active');});
+  const labels={attendance:'attendance',dashboard:'dashboard',settings:'settings'};
+  document.querySelectorAll('.tab-btn').forEach(b=>{if(b.textContent.toLowerCase().includes(name==='attendance'?'attend':name))b.classList.add('active');});
   if(name==='dashboard'&&adminPin)loadDashboard();
   if(name==='settings'&&settingsPin)renderClassesList();
 }
@@ -770,7 +760,6 @@ function switchTab(name){
 // ---- INIT ----
 loadClasses();
 loadAllStudents();
-setDefaults();
 </script>
 </body>
 </html>

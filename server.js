@@ -13,7 +13,6 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// ---------- helpers ----------
 function readDB() {
   if (!fs.existsSync(DB)) return { classes: [], students: [], records: [], adminPin: '1234' };
   try {
@@ -89,9 +88,7 @@ app.delete('/api/classes/:id', (req, res) => {
 app.get('/api/students', (req, res) => {
   const { classId } = req.query;
   const db = readDB();
-  const students = classId
-    ? db.students.filter(s => s.classId === classId)
-    : db.students;
+  const students = classId ? db.students.filter(s => s.classId === classId) : db.students;
   res.json(students);
 });
 
@@ -99,23 +96,12 @@ app.post('/api/students', (req, res) => {
   const { pin, name, classId } = req.body;
   const db = readDB();
   if (pin !== db.adminPin) return res.status(403).json({ error: 'Wrong PIN' });
-  if (!name || !name.trim() || !classId) return res.status(400).json({ error: "Name and class required" });
+  if (!name || !name.trim() || !classId) return res.status(400).json({ error: 'Name and class required' });
   const cls = db.classes.find(c => c.id === classId);
   if (!cls) return res.status(404).json({ error: 'Class not found' });
-  // prevent duplicates in same class
-  const exists = db.students.some(s =>
-    s.classId === classId &&
-    s.name.toLowerCase() === name.trim().toLowerCase()
-    
-  );
+  const exists = db.students.some(s => s.classId === classId && s.name.toLowerCase() === name.trim().toLowerCase());
   if (exists) return res.status(409).json({ error: 'Student already in this class' });
-  const student = {
-    id: Date.now().toString(),
-    classId,
-    className: cls.name,
-    name: name.trim(),
-    
-  };
+  const student = { id: Date.now().toString(), classId, className: cls.name, name: name.trim() };
   db.students.push(student);
   db.students.sort((a, b) => a.name.localeCompare(b.name));
   writeDB(db);
@@ -140,62 +126,48 @@ app.get('/api/records', (req, res) => {
   res.json(records);
 });
 
-app.post('/api/checkin', (req, res) => {
-  const { studentId, date, time } = req.body;
-  if (!studentId || !date || !time) return res.status(400).json({ error: 'All fields are required' });
-  const db      = readDB();
+// Teacher marks attendance: status can be present, late, or absent
+// If late, time is required and auto-confirmed as late
+// If present or absent, time is optional
+app.post('/api/attendance', (req, res) => {
+  const { pin, studentId, date, status, time } = req.body;
+  const db = readDB();
+  if (pin !== db.adminPin) return res.status(403).json({ error: 'Wrong PIN' });
+  if (!studentId || !date || !status) return res.status(400).json({ error: 'Student, date and status are required' });
+  if (!['present','late','absent'].includes(status)) return res.status(400).json({ error: 'Invalid status' });
+  if (status === 'late' && !time) return res.status(400).json({ error: 'Arrival time is required for late status' });
+
   const student = db.students.find(s => s.id === studentId);
   if (!student) return res.status(404).json({ error: 'Student not found' });
   const cls = db.classes.find(c => c.id === student.classId);
-  if (!cls)  return res.status(404).json({ error: 'Class not found' });
 
-  const status = calcStatus(date, time, cls);
+  // If late, verify the time actually makes them late
+  let finalStatus = status;
+  if (status === 'late' && time && cls) {
+    finalStatus = calcStatus(date, time, cls);
+    // teacher explicitly chose late — honour it even if time calc differs
+    finalStatus = 'late';
+  }
+
   const record = {
     id: Date.now(),
     classId:   student.classId,
-    className: cls.name,
+    className: cls ? cls.name : '',
     studentId,
-    name: student.name,
-    
+    name:      student.name,
     date,
-    time,
-    status,
+    time:      status === 'absent' ? null : (time || null),
+    status:    finalStatus,
+    markedBy:  'teacher',
     submittedAt: new Date().toISOString()
   };
 
-  // Replace if same student + date
   const key = `${studentId}_${date}`;
   db.records = db.records.filter(r => `${r.studentId}_${r.date}` !== key);
   db.records.push(record);
   db.records.sort((a, b) => (a.date + a.name) < (b.date + b.name) ? 1 : -1);
   writeDB(db);
-  res.json({ ok: true, status });
-});
-
-app.post('/api/absent', (req, res) => {
-  const { pin, studentId, date } = req.body;
-  const db = readDB();
-  if (pin !== db.adminPin) return res.status(403).json({ error: 'Wrong PIN' });
-  const student = db.students.find(s => s.id === studentId);
-  if (!student) return res.status(404).json({ error: 'Student not found' });
-  const cls = db.classes.find(c => c.id === student.classId);
-
-  const key = `${studentId}_${date}`;
-  db.records = db.records.filter(r => `${r.studentId}_${r.date}` !== key);
-  db.records.push({
-    id: Date.now(),
-    classId:   student.classId,
-    className: cls ? cls.name : '',
-    studentId,
-    name: student.name,
-    
-    date,
-    time: null,
-    status: 'absent',
-    submittedAt: new Date().toISOString()
-  });
-  writeDB(db);
-  res.json({ ok: true });
+  res.json({ ok: true, status: finalStatus });
 });
 
 app.delete('/api/records/:id', (req, res) => {
@@ -242,5 +214,4 @@ app.get('/api/export', (req, res) => {
 });
 
 app.get('/health', (req, res) => res.json({ status: 'ok' }));
-
 app.listen(PORT, '0.0.0.0', () => console.log(`Attendance Tracker running on port ${PORT}`));
